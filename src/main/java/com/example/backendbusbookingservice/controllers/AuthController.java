@@ -3,6 +3,7 @@ package com.example.backendbusbookingservice.controllers;
 import com.example.backendbusbookingservice.dto.LoginRequest;
 import com.example.backendbusbookingservice.dto.RoleRequest;
 import com.example.backendbusbookingservice.dto.SignupRequest;
+import com.example.backendbusbookingservice.security.JwtUtil;
 import com.example.backendbusbookingservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +25,11 @@ public class AuthController {
     {
         var userData=userService.GetUserByUsername(loginRequest);
         var data = new HashMap<String, Object>();
+
+        var jwtUtil=new JwtUtil();
+        String token=jwtUtil.generateToken(userData.getUsername(),userData.getRoles());
         data.put("status","Success" );
-        data.put("user",userData);
+        data.put("token",token);
         return  ResponseEntity.ok().body(new HashMap<>(data));
     }
 
